@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050507;
+  --foreground: #f4f4f5;
+  --font-sans: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  --font-mono: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* 100% Dark Industrial Theme */
+body {
+  background-color: #050507;
+  color: #f4f4f5;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 255, 255, 0.03), transparent 70%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.02), transparent 50%);
+  user-select: none;
+  overflow-x: hidden;
+}
+
+/* Otimizações touch screen para totem */
+button, a, input {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tipografia Corporativa Enterprise */
+.font-display {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.02em;
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.brand-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #a1a1aa;
+}
+
+.brand-gradient-text {
+  background: linear-gradient(180deg, #ffffff 15%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animação do feixe laser de precisão */
+@keyframes laserSweep {
+  0% {
+    top: 4%;
+    opacity: 0.15;
+  }
+  30% {
+    opacity: 0.95;
+  }
+  50% {
+    top: 94%;
+    opacity: 0.85;
+  }
+  70% {
+    opacity: 0.95;
+  }
+  100% {
+    top: 4%;
+    opacity: 0.15;
+  }
+}
+
+.animate-laser-sweep {
+  animation: laserSweep 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Animação de ondas de aproximação NFC Contactless */
+@keyframes nfcPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.animate-nfc-ring {
+  animation: nfcPulse 1.8s ease-out infinite;
+}
+
+/* Animação de ejeção do papel da impressora térmica física */
+@keyframes paperSlideDown {
+  0% {
+    max-height: 0px;
+    opacity: 0;
+    transform: translateY(-20px) scale(0.96);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-paper-feed {
+  animation: paperSlideDown 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Pulso de luz de atração do Modo de Descanso */
+@keyframes attractPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 40px -10px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 70px 5px rgba(255, 255, 255, 0.25);
+  }
+}
+
+.animate-attract-pulse {
+  animation: attractPulse 3.5s ease-in-out infinite;
+}
+
+/* Recorte serrilhado (dente de serra) de ticket térmico */
+.receipt-serrated {
+  background-image: radial-gradient(circle at 10px 0, transparent 6px, #ffffff 6.5px);
+  background-size: 20px 20px;
+  background-repeat: repeat-x;
+}
+
+/* Efeito de vidro escuro fosco para chassi industrial */
+.kiosk-panel {
+  background: rgba(18, 18, 22, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.kiosk-card {
+  background: rgba(26, 26, 32, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Efeito de clique físico tátil */
+.kiosk-btn-active:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* MODO CADEIRANTE (Norma ABNT NBR 15250) */
+/* Rebaixa a área útil da tela para facilitar o alcance de pessoas sentadas */
+.kiosk-wheelchair-mode {
+  padding-top: 18vh !important;
+  justify-content: flex-end !important;
+  transition: padding-top 0.4s ease, justify-content 0.4s ease;
+}
+
+/* MODO ALTO CONTRASTE (Norma de Acessibilidade & Luz Solar) */
+.kiosk-high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.kiosk-high-contrast .kiosk-panel,
+.kiosk-high-contrast .kiosk-card {
+  background-color: #050505 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: none !important;
+}
+
+.kiosk-high-contrast button {
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+}
+
+/* Estilos de Impressão Exclusiva: APENAS O DANFE NFC-e */
+@media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Oculta absolutamente todos os elementos da interface do totem */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Exibe exclusivamente o comprovante fiscal oficial DANFE NFC-e */
+  #danfe-nfce-print-area,
+  #danfe-nfce-print-area * {
+    visibility: visible !important;
+  }
+
+  #danfe-nfce-print-area {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    max-width: 80mm !important;
+    margin: 0 auto !important;
+    padding: 4mm 6mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

@@ -1,0 +1,64 @@
+// Prisma schema for Totem de Autoatendimento para Estacionamento
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TicketStatus {
+  PENDENTE
+  PAGO
+  LIBERADO
+  CANCELADO
+}
+
+enum MetodoPagamento {
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+}
+
+model Ticket {
+  id               String          @id @default(uuid())
+  codigoTicket     String?         @unique // Código de barras do ticket impresso (ex: 1024, 1025)
+  placa            String          // Placa do veículo em maiúsculas (ex: BRA2E19 ou ABC1234)
+  horarioEntrada   DateTime        @default(now())
+  horarioPagamento DateTime?
+  horarioSaida     DateTime?
+  status           TicketStatus    @default(PENDENTE)
+  valorTotal       Decimal         @default(0.00)
+  toleranciaSaidaAte DateTime?     // Horário limite para liberação na cancela (20 min pós-pagamento)
+  pagamentos       Pagamento[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([placa, status])
+  @@index([codigoTicket])
+}
+
+model Pagamento {
+  id              String          @id @default(uuid())
+  ticketId        String
+  ticket          Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  metodo          MetodoPagamento
+  valor           Decimal
+  codigoTransacao String
+  idempotencyKey  String?         @unique // Previne cobranças duplicadas em conexões instáveis
+  status          String          @default("APROVADO") // APROVADO, RECUSADO, PENDENTE
+  pagoEm          DateTime        @default(now())
+}
+
+model TarifaConfig {
+  id                 String   @id @default("default")
+  nomeEstacionamento String   @default("Estacionamento Rotativo")
+  toleranciaMinutos  Int      @default(15)     // Período de tolerância inicial (grátis)
+  valorPrimeiraHora  Decimal  @default(12.00)  // Cobrança pela primeira hora
+  valorHoraAdicional Decimal  @default(4.00)   // Valor a cada hora/fração adicional
+  fracaoMinutos      Int      @default(30)     // Bloco de fracionamento
+  tetoDiario         Decimal  @default(45.00)  // Valor máximo diário
+  toleranciaSaidaMin Int      @default(20)     // 20 minutos de tolerância pós-pagamento para cancela
+  updatedAt          DateTime @updatedAt
+}

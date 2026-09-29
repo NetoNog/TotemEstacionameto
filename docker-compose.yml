@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Banco de Dados PostgreSQL Robusto para Operação do Estacionamento
+  postgres:
+    image: postgres:16-alpine
+    container_name: totem-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-totem_estacionamento}
+    ports:
+      - "5432:5432"
+    volumes:
+      - totem_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-totem_estacionamento}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - totem-network
+
+  # Aplicação do Totem de Autoatendimento em Modo Kiosk
+  totem-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: totem-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-totem_estacionamento}?schema=public
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-totem-admin-secret-2026}
+      NEXT_PUBLIC_APP_NAME: "SmartTotem Estacionamento"
+      PIX_CHAVE: ${PIX_CHAVE:-12345678000190}
+      PIX_BENEFICIARIO: ${PIX_BENEFICIARIO:-SMARTPARK TOTEM 01}
+      PIX_CIDADE: ${PIX_CIDADE:-SAO PAULO}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - totem-network
+
+volumes:
+  totem_postgres_data:
+    driver: local
+
+networks:
+  totem-network:
+    driver: bridge
